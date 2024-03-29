@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gosu (1.4.1)
+    orange_zest (0.2.0)
+      gosu
+
+PLATFORMS
+  arm64-darwin-21
+  x86-mingw32
+
+DEPENDENCIES
+  gosu
+  orange_zest (>= 0.2.0)
+
+BUNDLED WITH
+   2.2.22
