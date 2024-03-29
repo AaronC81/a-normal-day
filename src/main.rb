@@ -6,10 +6,10 @@ OZ = OrangeZest
 require_relative 'entity/player'
 
 module GosuGameJam6
-    WIDTH = 1600
-    HEIGHT = 900
-
     class Game < OZ::Window
+        WIDTH = 1600
+        HEIGHT = 900
+        
         def initialize
             super WIDTH, HEIGHT
             Gosu.enable_undocumented_retrofication

@@ -1,3 +1,5 @@
+require_relative 'bullet'
+
 module GosuGameJam6
     class Player < OZ::Entity
         WIDTH = 30
@@ -18,10 +20,23 @@ module GosuGameJam6
             super
 
             # Movement
-            self.position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
-            self.position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
-            self.position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
-            self.position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
+            position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
+            position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
+            position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
+            position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
+
+            if OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on
+                bullet = Bullet.new(position: centre_position)
+                bullet.rotation = Gosu.angle(centre_position.x, centre_position.y, OZ::Input.cursor.x, OZ::Input.cursor.y)
+                bullet.register
+            end
+        end
+
+        def centre_position
+            OZ::Point[
+                position.x + image.width / 2,
+                position.y + image.height / 2,
+            ]
         end
     end
 end
