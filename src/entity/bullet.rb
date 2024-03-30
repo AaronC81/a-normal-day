@@ -5,14 +5,26 @@ module GosuGameJam6
         def initialize(**kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.placeholder(5, 30, Gosu::Color::BLUE)
+                    "idle" => OZ::Animation.placeholder(width, height, Gosu::Color::BLUE)
                 },
                 **kw
             )
         end
 
+        def width
+            5
+        end
+
+        def height
+            30
+        end
+
         def speed
             30
+        end
+
+        def draw
+            super
         end
 
         def update
@@ -30,8 +42,33 @@ module GosuGameJam6
                 unregister
             end
 
-            # TODO: also destroy when this hits a wall. `bounding_box` doesn't work with rotation,
-            #       probably want to check points on each side instead
+            if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) }
+                # TODO: "fizzle" animation
+                unregister
+            end
+        end
+
+        def front_point
+            # Align to the centre of the bullet
+            OZ::Point[
+                position.x + Gosu.offset_x(self.rotation + 90, width / 2),
+                position.y + Gosu.offset_y(self.rotation + 90, width / 2),
+            ]
+        end
+
+        def back_point
+            fp = front_point
+            OZ::Point[
+                fp.x + Gosu.offset_x(self.rotation, -height),
+                fp.y + Gosu.offset_y(self.rotation, -height),
+            ]
+        end
+
+        def colliding_with?(box)
+            # Test two different points to check whether there's been a collision - each end of the
+            # projectile
+            # Should help make for more accurate collisions at high speed
+            box.point_inside?(front_point) || box.point_inside?(back_point)
         end
     end
 end
