@@ -2,13 +2,18 @@ module GosuGameJam6
     class Bullet < OZ::Entity
         SCREEN_PADDING = 50
 
-        def initialize(**kw)
+        def initialize(friendly:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.placeholder(width, height, Gosu::Color::BLUE)
                 },
                 **kw
             )
+            @friendly = friendly
+        end
+
+        def friendly?
+            @friendly
         end
 
         def width
@@ -43,10 +48,18 @@ module GosuGameJam6
             end
 
             # Check if this hit an enemy
-            if (enemy = Game::ENEMIES.items.find { |enemy| colliding_with?(enemy.bounding_box) })
-                enemy.hit_by(self)
-                unregister
-                return
+            if friendly?
+                if (enemy = Game::ENEMIES.items.find { |enemy| colliding_with?(enemy.bounding_box) })
+                    enemy.hit_by(self)
+                    unregister
+                    return
+                end
+            else
+                if colliding_with?(Game.player.bounding_box)
+                    Game.player.hit_by(self)
+                    unregister
+                    return
+                end
             end
 
             # Check if this hit a wall

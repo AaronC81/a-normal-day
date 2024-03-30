@@ -1,7 +1,8 @@
 require_relative 'bullet'
+require_relative 'character'
 
 module GosuGameJam6
-    class Player < OZ::Entity
+    class Player < Character
         WIDTH = 30
         HEIGHT = 30
 
@@ -16,14 +17,18 @@ module GosuGameJam6
             )
         end
 
+        def max_health
+            100
+        end
+
         def update
             super
             
             update_movement
 
             if OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on
-                bullet = Bullet.new(position: centre_position)
-                bullet.rotation = Gosu.angle(centre_position.x, centre_position.y, OZ::Input.cursor.x, OZ::Input.cursor.y)
+                bullet = Bullet.new(friendly: true, position: bounding_box.centre)
+                bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, OZ::Input.cursor.x, OZ::Input.cursor.y)
                 bullet.register
             end
         end

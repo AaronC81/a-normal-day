@@ -16,8 +16,8 @@ module GosuGameJam6
         WALLS = OZ::Group.new
         ENEMIES = OZ::Group.new
 
-        class << self
-            attr_accessor :player
+        def self.player
+            @@player
         end
         
         def initialize
@@ -34,7 +34,8 @@ module GosuGameJam6
             ENEMIES.register
 
             # Create player
-            @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200)).register
+            @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200))
+            @@player.register
 
             # Add some debug walls
             GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: 50, height: HEIGHT).register(WALLS)

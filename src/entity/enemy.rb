@@ -1,7 +1,7 @@
-require_relative 'bullet'
+require_relative 'character'
 
 module GosuGameJam6
-    class Enemy < OZ::Entity
+    class Enemy < Character
         def initialize(**kw)
             super(
                 animations: {
@@ -9,10 +9,9 @@ module GosuGameJam6
                 },
                 **kw
             )
-            @health = max_health
-        end
 
-        attr_accessor :health
+            @next_fire_timer = rand(100..200)
+        end
 
         def width
             30
@@ -26,17 +25,21 @@ module GosuGameJam6
             50
         end
 
-        def hit_by(bullet)
-            take_damage bullet.damage
-        end
-
-        def take_damage(amount)
-            @health -= amount
-            die if @health <= 0
-        end
-
         def die
             unregister
+        end
+
+        def update
+            super
+
+            @next_fire_timer -= 1
+            if @next_fire_timer <= 0
+                bullet = Bullet.new(friendly: false, position: bounding_box.centre)
+                bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, Game.player.bounding_box.centre.x, Game.player.bounding_box.centre.y)
+                bullet.register
+
+                @next_fire_timer = rand(30..150)
+            end
         end
     end
 end
