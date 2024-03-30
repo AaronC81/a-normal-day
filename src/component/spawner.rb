@@ -1,6 +1,7 @@
 module GosuGameJam6
     class Spawner < OZ::Component
         SPAWN_PADDING = 100
+        SPAWN_SPACING = 40
 
         def initialize
             @tick_timer = 0
@@ -23,10 +24,14 @@ module GosuGameJam6
                 base_x = rand(SPAWN_PADDING..(Game::WIDTH - SPAWN_PADDING))
                 base_y = rand(SPAWN_PADDING..(Game::HEIGHT - SPAWN_PADDING))
 
-                # TODO: if difficulty gets big, could still spawn in a wall
-                (difficulty + 1).times do |x|
-                    (difficulty + 1).times do |y| 
-                        GosuGameJam6::Enemy.new(position: OZ::Point[base_x + x * 40, base_y + y * 40]).register(Game::ENEMIES)
+                # TODO: absolutely terrible
+                dimension = difficulty + 1
+                base_x -= 1 while base_x + (dimension - 1) * SPAWN_SPACING > (Game::WIDTH - SPAWN_PADDING)
+                base_y -= 1 while base_y + (dimension - 1) * SPAWN_SPACING > (Game::HEIGHT - SPAWN_PADDING)
+
+                dimension.times do |x|
+                    dimension.times do |y| 
+                        GosuGameJam6::Enemy.new(position: OZ::Point[base_x + x * SPAWN_SPACING, base_y + y * SPAWN_SPACING]).register(Game::ENEMIES)
                     end
                 end
 
