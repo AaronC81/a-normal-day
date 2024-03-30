@@ -18,17 +18,34 @@ module GosuGameJam6
 
         def update
             super
-
-            # Movement
-            position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
-            position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
-            position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
-            position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
+            
+            update_movement
 
             if OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on
                 bullet = Bullet.new(position: centre_position)
                 bullet.rotation = Gosu.angle(centre_position.x, centre_position.y, OZ::Input.cursor.x, OZ::Input.cursor.y)
                 bullet.register
+            end
+        end
+
+        def update_movement
+            # Handle movement and wall checking in both X and Y directions
+            # Means you can still slide along a horizontal wall when holding W+D, for example
+
+            old_position = position.dup
+            position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
+            position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
+            if Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) }
+                # Cancel move if it means we hit a wall
+                self.position = old_position
+            end
+
+            old_position = position.dup
+            position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
+            position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
+            if Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) }
+                # Cancel move if it means we hit a wall
+                self.position = old_position
             end
         end
 

@@ -29,6 +29,9 @@ module GosuGameJam6
                position.y > (GosuGameJam6::Game::HEIGHT + SCREEN_PADDING)
                 unregister
             end
+
+            # TODO: also destroy when this hits a wall. `bounding_box` doesn't work with rotation,
+            #       probably want to check points on each side instead
         end
     end
 end
