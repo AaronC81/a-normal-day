@@ -10,7 +10,7 @@ module GosuGameJam6
         def initialize(**kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.placeholder(WIDTH, HEIGHT, Gosu::Color::RED)
+                    "idle" => OZ::Animation.placeholder(WIDTH, HEIGHT, Gosu::Color::GREEN)
                 },
                 **kw
             )

@@ -6,6 +6,7 @@ OZ = OrangeZest
 require_relative 'entity/player'
 require_relative 'entity/bullet'
 require_relative 'entity/wall'
+require_relative 'entity/enemy'
 
 module GosuGameJam6
     class Game < OZ::Window
@@ -13,6 +14,7 @@ module GosuGameJam6
         HEIGHT = 900
 
         WALLS = OZ::Group.new
+        ENEMIES = OZ::Group.new
 
         class << self
             attr_accessor :player
@@ -29,6 +31,7 @@ module GosuGameJam6
 
             # Set up groups
             WALLS.register
+            ENEMIES.register
 
             # Create player
             @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200)).register
@@ -38,6 +41,11 @@ module GosuGameJam6
             GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: WIDTH, height: 50).register(WALLS)
             GosuGameJam6::Wall.new(position: OZ::Point[WIDTH - 50, 0], width: 50, height: HEIGHT).register(WALLS)
             GosuGameJam6::Wall.new(position: OZ::Point[0, HEIGHT - 50], width: WIDTH, height: 50).register(WALLS)
+
+            # Add enemies
+            5.times do |i|
+                GosuGameJam6::Enemy.new(position: OZ::Point[300 + i * 50, 300 + i * 50]).register(ENEMIES)
+            end
         end
 
         def update

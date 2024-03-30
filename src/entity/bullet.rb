@@ -20,11 +20,11 @@ module GosuGameJam6
         end
 
         def speed
-            30
+            20
         end
 
-        def draw
-            super
+        def damage
+            20
         end
 
         def update
@@ -42,9 +42,18 @@ module GosuGameJam6
                 unregister
             end
 
+            # Check if this hit an enemy
+            if (enemy = Game::ENEMIES.items.find { |enemy| colliding_with?(enemy.bounding_box) })
+                enemy.hit_by(self)
+                unregister
+                return
+            end
+
+            # Check if this hit a wall
             if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) }
                 # TODO: "fizzle" animation
                 unregister
+                return
             end
         end
 
@@ -64,11 +73,19 @@ module GosuGameJam6
             ]
         end
 
+        def mid_point
+            fp = front_point
+            bp = back_point
+            OZ::Point[
+                (fp.x + bp.x) / 2,
+                (fp.y + bp.y) / 2,
+            ]
+        end
+
         def colliding_with?(box)
-            # Test two different points to check whether there's been a collision - each end of the
-            # projectile
+            # Test three different points to check whether there's been a collision
             # Should help make for more accurate collisions at high speed
-            box.point_inside?(front_point) || box.point_inside?(back_point)
+            box.point_inside?(front_point) || box.point_inside?(back_point) || box.point_inside?(mid_point)
         end
     end
 end
