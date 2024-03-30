@@ -8,6 +8,8 @@ require_relative 'entity/bullet'
 require_relative 'entity/wall'
 require_relative 'entity/enemy'
 
+require_relative 'component/spawner'
+
 module GosuGameJam6
     class Game < OZ::Window
         WIDTH = 1600
@@ -43,10 +45,8 @@ module GosuGameJam6
             GosuGameJam6::Wall.new(position: OZ::Point[WIDTH - 50, 0], width: 50, height: HEIGHT).register(WALLS)
             GosuGameJam6::Wall.new(position: OZ::Point[0, HEIGHT - 50], width: WIDTH, height: 50).register(WALLS)
 
-            # Add enemies
-            5.times do |i|
-                GosuGameJam6::Enemy.new(position: OZ::Point[300 + i * 50, 300 + i * 50]).register(ENEMIES)
-            end
+            # Create enemy spawner
+            GosuGameJam6::Spawner.new.register
         end
 
         def update
