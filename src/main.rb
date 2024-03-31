@@ -67,8 +67,8 @@ module GosuGameJam6
 
         def self.offset
             OZ::Point[
-                WIDTH / 2 - player.position.x,
-                HEIGHT / 2 - player.position.y,
+                WIDTH / 2 - player.centre_position.x,
+                HEIGHT / 2 - player.centre_position.y,
             ]
         end
     
