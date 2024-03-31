@@ -28,7 +28,9 @@ module GosuGameJam6
 
             if OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on
                 bullet = Bullet.new(friendly: true, position: bounding_box.centre)
-                bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, OZ::Input.cursor.x, OZ::Input.cursor.y)
+            
+                cursor_world_pos = OZ::Input.cursor - Game.offset
+                bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, cursor_world_pos.x, cursor_world_pos.y)
                 bullet.register
             end
         end

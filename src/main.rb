@@ -9,6 +9,7 @@ require_relative 'entity/wall'
 require_relative 'entity/enemy'
 
 require_relative 'component/spawner'
+require_relative 'component/ui'
 
 module GosuGameJam6
     class Game < OZ::Window
@@ -17,6 +18,10 @@ module GosuGameJam6
 
         WALLS = OZ::Group.new
         ENEMIES = OZ::Group.new
+
+        # Not registered into `Main` - used to draw stuff which shouldn't scroll
+        STATIC_EARLY = OZ::Group.new
+        STATIC_LATE = OZ::Group.new
 
         def self.player
             @@player
@@ -29,7 +34,7 @@ module GosuGameJam6
             # Add a component to clear the screen
             OZ::Component
                 .anon(draw: ->{ Gosu.draw_rect(0, 0, WIDTH, HEIGHT, Gosu::Color::WHITE) })
-                .register
+                .register(STATIC_EARLY)
 
             # Set up groups
             WALLS.register
@@ -47,11 +52,32 @@ module GosuGameJam6
 
             # Create enemy spawner
             GosuGameJam6::Spawner.new.register
+
+            # Draw UI
+            # (This is last, so it gets drawn on top of other stuff)
+            UI.new.register(STATIC_LATE)
         end
 
         def update
             super
+            STATIC_EARLY.update
+            STATIC_LATE.update
             OZ::Input.clear_click
+        end
+
+        def self.offset
+            OZ::Point[
+                WIDTH / 2 - player.position.x,
+                HEIGHT / 2 - player.position.y,
+            ]
+        end
+    
+        def draw
+            STATIC_EARLY.draw
+            Gosu.translate(Game.offset.x, Game.offset.y) do
+                super
+            end
+            STATIC_LATE.draw
         end
     end
 end
