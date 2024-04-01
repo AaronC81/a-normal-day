@@ -30,7 +30,13 @@ module GosuGameJam6
 
             @next_fire_timer -= 1
             if @next_fire_timer <= 0
-                fire_at_player if los
+                if los
+                    fire_at_player(
+                        speed: 7,
+                        damage: 10,
+                        spread: 15
+                    )
+                end
 
                 @next_fire_timer = rand(30..120)
             end

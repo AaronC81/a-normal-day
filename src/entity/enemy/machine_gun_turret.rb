@@ -34,7 +34,13 @@ module GosuGameJam6
 
             if @firing_timer > 0
                 @firing_timer -= 1
-                fire_at_player if @firing_timer % 5 == 0
+                if @firing_timer % 5 == 0
+                    fire_at_player(
+                        speed: 10,
+                        damage: 10,
+                        spread: 5
+                    )
+                end
             end
         end
     end

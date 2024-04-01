@@ -23,9 +23,9 @@ module GosuGameJam6
             OZ::Point[Gosu.offset_x(angle_to_player, 1), Gosu.offset_y(angle_to_player, 1)]
         end
 
-        def fire_at_player
-            bullet = Bullet.new(friendly: false, position: bounding_box.centre)
-            bullet.rotation = angle_to_player
+        def fire_at_player(spread:, **kw)
+            bullet = Bullet.new(friendly: false, position: bounding_box.centre, **kw)
+            bullet.rotation = angle_to_player + rand(-spread .. spread)
             bullet.register
 
             bullet

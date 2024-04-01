@@ -2,7 +2,7 @@ module GosuGameJam6
     class Bullet < OZ::Entity
         SCREEN_PADDING = 50
 
-        def initialize(friendly:, **kw)
+        def initialize(friendly:, speed:, damage:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.placeholder(width, height, Gosu::Color::BLUE)
@@ -10,6 +10,8 @@ module GosuGameJam6
                 **kw
             )
             @friendly = friendly
+            @speed = speed
+            @damage = damage
         end
 
         def friendly?
@@ -24,13 +26,7 @@ module GosuGameJam6
             30
         end
 
-        def speed
-            20
-        end
-
-        def damage
-            20
-        end
+        attr_accessor :speed, :damage
 
         def update
             super
