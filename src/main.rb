@@ -86,6 +86,26 @@ module GosuGameJam6
             end
             STATIC_LATE.draw
         end
+
+        def self.line_of_sight?(a, b=Game.player.position)
+            # Take an arbitrary sample of points along the line between the two points, and check
+            # they all fall into an `OpenArea`
+            # For "dramatic effect", and also because it's harder to program, walls don't block
+            # line-of-sight
+            sample_points = 8
+
+            x_step = (b.x.to_f - a.x.to_f) / sample_points
+            y_step = (b.y.to_f - a.y.to_f) / sample_points
+
+            sample_points.times do |i|
+                this_point = a + OZ::Point[i * x_step, i * y_step]
+                if !Game::OPEN_AREAS.items.any? { |area| area.bounding_box.point_inside?(this_point) }
+                    return false
+                end
+            end
+
+            true
+        end
     end
 end
 

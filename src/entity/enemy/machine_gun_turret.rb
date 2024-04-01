@@ -25,7 +25,9 @@ module GosuGameJam6
 
             @next_fire_timer -= 1
             if @next_fire_timer <= 0
-                @firing_timer = 30
+                if Game.line_of_sight?(position)
+                    @firing_timer = 30
+                end
 
                 @next_fire_timer = 120
             end
