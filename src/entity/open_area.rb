@@ -7,6 +7,11 @@ module GosuGameJam6
                 },
                 **kw
             )
+
+            @width = width
+            @height = height
         end
+
+        attr_reader :width, :height
     end
 end

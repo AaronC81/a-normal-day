@@ -53,13 +53,14 @@ module GosuGameJam6
             @@player.register
 
             wg = WorldGen.new
-            wg.corridor_areas(wg.generate_corridor_description(2000)).each do |area|
+            areas = wg.corridor_areas(wg.generate_corridor_description(2000))
+            areas.each do |area|
                 area.register(OPEN_AREAS)
             end
-
-            # Create enemy spawner
-            # GosuGameJam6::Spawner.new.register
-            Walker.new(position: OZ::Point[300, 300]).register(ENEMIES)
+            enemies = wg.populate_areas(areas, 1, [MachineGunTurret, Walker])
+            enemies.each do |enemy|
+                enemy.register(ENEMIES)
+            end
 
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)

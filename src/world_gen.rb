@@ -2,6 +2,28 @@ require_relative 'entity/wall'
 
 module GosuGameJam6
     class WorldGen
+        # Given a list of areas, returns a list of (unregistered) enemies to populate them with.
+        def populate_areas(areas, density, enemy_pool)
+            enemies = []
+
+            far_edge_padding = 70
+
+            areas = areas[1..-1]
+            areas.each do |area|
+                size = area.width * area.height
+                total_number_of_enemies = ((size / 100000) * density).ceil
+
+                total_number_of_enemies.times do
+                    x = area.position.x + rand(0..(area.width - far_edge_padding))
+                    y = area.position.y + rand(0..(area.height - far_edge_padding))
+                    enemy = enemy_pool.sample.new(position: OZ::Point[x, y])
+                    enemies << enemy
+                end
+            end
+
+            enemies
+        end
+
         # Returns (unregistered) `OpenArea` instances for a corridor description.
         def corridor_areas(corridors)
             areas = []
