@@ -13,6 +13,8 @@ require_relative 'entity/open_area'
 require_relative 'component/spawner'
 require_relative 'component/ui'
 
+require_relative 'world_gen'
+
 module GosuGameJam6
     class Game < OZ::Window
         WIDTH = 1600
@@ -49,16 +51,21 @@ module GosuGameJam6
             @@player.register
 
             # Add debug area
-            GosuGameJam6::OpenArea.new(position: OZ::Point[0, 0], width: WIDTH, height: HEIGHT).register(OPEN_AREAS)
+            # GosuGameJam6::OpenArea.new(position: OZ::Point[0, 0], width: WIDTH, height: HEIGHT).register(OPEN_AREAS)
 
             # Add some debug walls
-            GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: 50, height: HEIGHT).register(WALLS)
-            GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: WIDTH, height: 50).register(WALLS)
-            GosuGameJam6::Wall.new(position: OZ::Point[WIDTH - 50, 0], width: 50, height: HEIGHT).register(WALLS)
-            GosuGameJam6::Wall.new(position: OZ::Point[0, HEIGHT - 50], width: WIDTH, height: 50).register(WALLS)
+            # GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: 50, height: HEIGHT).register(WALLS)
+            # GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: WIDTH, height: 50).register(WALLS)
+            # GosuGameJam6::Wall.new(position: OZ::Point[WIDTH - 50, 0], width: 50, height: HEIGHT).register(WALLS)
+            # GosuGameJam6::Wall.new(position: OZ::Point[0, HEIGHT - 50], width: WIDTH, height: 50).register(WALLS)
+
+            wg = WorldGen.new
+            wg.corridor_areas(wg.generate_corridor_description(2000)).each do |area|
+                area.register(OPEN_AREAS)
+            end
 
             # Create enemy spawner
-            GosuGameJam6::Spawner.new.register
+            # GosuGameJam6::Spawner.new.register
 
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)

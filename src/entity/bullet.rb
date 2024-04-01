@@ -63,7 +63,7 @@ module GosuGameJam6
             end
 
             # Check if this hit a wall, or went out of an open area
-            if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) } || !Game::OPEN_AREAS.items.any? { |area| colliding_with?(area.bounding_box) }
+            if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) } || !Game::OPEN_AREAS.items.any? { |area| colliding_with?(area.full_bounding_box) }
                 # TODO: "fizzle" animation
                 unregister
                 return

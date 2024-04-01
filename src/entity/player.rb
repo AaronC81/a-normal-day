@@ -58,7 +58,7 @@ module GosuGameJam6
 
         def valid_position?
             !Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) } \
-                && Game::OPEN_AREAS.items.any? { |area| area.bounding_box.encloses?(bounding_box) }
+                && Game::OPEN_AREAS.items.any? { |area| area.bounding_box.overlaps?(bounding_box) }
         end
 
         def centre_position
