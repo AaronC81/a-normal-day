@@ -23,5 +23,10 @@ module GosuGameJam6
         def die
             raise 'abstract: die'
         end
+
+        def valid_position?
+            !Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) } \
+                && Game::OPEN_AREAS.items.any? { |area| area.bounding_box.overlaps?(bounding_box) }
+        end
     end
 end

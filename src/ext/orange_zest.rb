@@ -7,4 +7,10 @@ module OrangeZest
             && self.origin.y + self.height >= other.origin.y + other.height
         end
     end
+
+    class Point
+        def *(scalar)
+            OZ::Point[x * scalar, y * scalar]
+        end
+    end
 end

@@ -9,6 +9,7 @@ require_relative 'entity/bullet'
 require_relative 'entity/wall'
 require_relative 'entity/enemy'
 require_relative 'entity/enemy/machine_gun_turret'
+require_relative 'entity/enemy/walker'
 require_relative 'entity/open_area'
 
 require_relative 'component/spawner'
@@ -58,7 +59,7 @@ module GosuGameJam6
 
             # Create enemy spawner
             # GosuGameJam6::Spawner.new.register
-            MachineGunTurret.new(position: OZ::Point[300, 300]).register(ENEMIES)
+            Walker.new(position: OZ::Point[300, 300]).register(ENEMIES)
 
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)

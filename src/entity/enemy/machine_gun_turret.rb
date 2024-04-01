@@ -9,15 +9,15 @@ module GosuGameJam6
         end
 
         def width
-            30
+            50
         end
 
         def height
-            30
+            50
         end
 
         def max_health
-            80
+            120
         end
 
         def update
@@ -34,11 +34,7 @@ module GosuGameJam6
 
             if @firing_timer > 0
                 @firing_timer -= 1
-                if @firing_timer % 5 == 0
-                    bullet = Bullet.new(friendly: false, position: bounding_box.centre)
-                    bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, Game.player.bounding_box.centre.x, Game.player.bounding_box.centre.y)
-                    bullet.register    
-                end
+                fire_at_player if @firing_timer % 5 == 0
             end
         end
     end

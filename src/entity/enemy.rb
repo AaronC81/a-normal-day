@@ -14,5 +14,21 @@ module GosuGameJam6
         def die
             unregister
         end
+
+        def angle_to_player
+            Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, Game.player.bounding_box.centre.x, Game.player.bounding_box.centre.y)
+        end
+
+        def vector_to_player
+            OZ::Point[Gosu.offset_x(angle_to_player, 1), Gosu.offset_y(angle_to_player, 1)]
+        end
+
+        def fire_at_player
+            bullet = Bullet.new(friendly: false, position: bounding_box.centre)
+            bullet.rotation = angle_to_player
+            bullet.register
+
+            bullet
+        end
     end
 end
