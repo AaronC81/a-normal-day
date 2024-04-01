@@ -68,15 +68,17 @@ module GosuGameJam6
 
             axis = [:horizontal, :vertical].sample
 
-            first_min_length = 800
-
             corridors = []
             length_so_far = 0
             until length_so_far >= total_length
-                this_length = rand(400..2000)
-                this_length = [this_length, first_min_length].max if length_so_far == 0
+                if length_so_far == 0
+                    this_length = 800
+                    this_width = 200
+                else
+                    this_length = rand(400..2000)
+                    this_width = rand(200..600)
+                end
                 this_direction = available_directions_by_axis[axis].sample
-                this_width = rand(200..600)
 
                 corridors << [this_length, this_width, this_direction]
 
