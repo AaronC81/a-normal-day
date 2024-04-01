@@ -8,6 +8,7 @@ require_relative 'entity/player'
 require_relative 'entity/bullet'
 require_relative 'entity/wall'
 require_relative 'entity/enemy'
+require_relative 'entity/enemy/machine_gun_turret'
 require_relative 'entity/open_area'
 
 require_relative 'component/spawner'
@@ -50,15 +51,6 @@ module GosuGameJam6
             @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200))
             @@player.register
 
-            # Add debug area
-            # GosuGameJam6::OpenArea.new(position: OZ::Point[0, 0], width: WIDTH, height: HEIGHT).register(OPEN_AREAS)
-
-            # Add some debug walls
-            # GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: 50, height: HEIGHT).register(WALLS)
-            # GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: WIDTH, height: 50).register(WALLS)
-            # GosuGameJam6::Wall.new(position: OZ::Point[WIDTH - 50, 0], width: 50, height: HEIGHT).register(WALLS)
-            # GosuGameJam6::Wall.new(position: OZ::Point[0, HEIGHT - 50], width: WIDTH, height: 50).register(WALLS)
-
             wg = WorldGen.new
             wg.corridor_areas(wg.generate_corridor_description(2000)).each do |area|
                 area.register(OPEN_AREAS)
@@ -66,6 +58,7 @@ module GosuGameJam6
 
             # Create enemy spawner
             # GosuGameJam6::Spawner.new.register
+            MachineGunTurret.new(position: OZ::Point[300, 300]).register(ENEMIES)
 
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)
