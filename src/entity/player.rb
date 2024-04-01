@@ -42,7 +42,7 @@ module GosuGameJam6
             old_position = position.dup
             position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
             position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
-            if Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) }
+            unless valid_position?
                 # Cancel move if it means we hit a wall
                 self.position = old_position
             end
@@ -50,10 +50,15 @@ module GosuGameJam6
             old_position = position.dup
             position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
             position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
-            if Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) }
+            unless valid_position?
                 # Cancel move if it means we hit a wall
                 self.position = old_position
             end
+        end
+
+        def valid_position?
+            !Game::WALLS.items.any? { |wall| wall.bounding_box.overlaps?(bounding_box) } \
+                && Game::OPEN_AREAS.items.any? { |area| area.bounding_box.encloses?(bounding_box) }
         end
 
         def centre_position

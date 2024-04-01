@@ -2,11 +2,13 @@ require 'gosu'
 
 require 'orange_zest'
 OZ = OrangeZest
+require_relative 'ext/orange_zest'
 
 require_relative 'entity/player'
 require_relative 'entity/bullet'
 require_relative 'entity/wall'
 require_relative 'entity/enemy'
+require_relative 'entity/open_area'
 
 require_relative 'component/spawner'
 require_relative 'component/ui'
@@ -17,6 +19,7 @@ module GosuGameJam6
         HEIGHT = 900
 
         WALLS = OZ::Group.new
+        OPEN_AREAS = OZ::Group.new
         ENEMIES = OZ::Group.new
 
         # Not registered into `Main` - used to draw stuff which shouldn't scroll
@@ -37,12 +40,16 @@ module GosuGameJam6
                 .register(STATIC_EARLY)
 
             # Set up groups
+            OPEN_AREAS.register
             WALLS.register
             ENEMIES.register
 
             # Create player
             @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200))
             @@player.register
+
+            # Add debug area
+            GosuGameJam6::OpenArea.new(position: OZ::Point[0, 0], width: WIDTH, height: HEIGHT).register(OPEN_AREAS)
 
             # Add some debug walls
             GosuGameJam6::Wall.new(position: OZ::Point[0, 0], width: 50, height: HEIGHT).register(WALLS)
