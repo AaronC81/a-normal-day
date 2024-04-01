@@ -49,22 +49,37 @@ module GosuGameJam6
             ENEMIES.register
 
             # Create player
-            @@player = GosuGameJam6::Player.new(position: OZ::Point.new(200, 200))
+            @@player = GosuGameJam6::Player.new
             @@player.register
 
-            wg = WorldGen.new
-            areas = wg.corridor_areas(wg.generate_corridor_description(2000))
-            areas.each do |area|
-                area.register(OPEN_AREAS)
-            end
-            enemies = wg.populate_areas(areas, 1, [MachineGunTurret, Walker])
-            enemies.each do |enemy|
-                enemy.register(ENEMIES)
-            end
+            # Difficulty control
+            @world_gen_length = 2000
+            @world_gen_density = 1
+            
+            regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
 
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)
             UI.new.register(STATIC_LATE)
+        end
+
+        def regenerate_world(length, density, pool)
+            # Tear down
+            OPEN_AREAS.items.each(&:unregister)
+            ENEMIES.items.each(&:unregister)
+
+            wg = WorldGen.new
+            areas = wg.corridor_areas(wg.generate_corridor_description(length))
+            areas.each do |area|
+                area.register(OPEN_AREAS)
+            end
+            enemies = wg.populate_areas(areas, density, pool)
+            enemies.each do |enemy|
+                enemy.register(ENEMIES)
+            end
+
+            # TODO: better spawn location
+            @@player.position = areas.first.bounding_box.centre
         end
 
         def update
@@ -72,6 +87,13 @@ module GosuGameJam6
             STATIC_EARLY.update
             STATIC_LATE.update
             OZ::Input.clear_click
+
+            # TODO: crude
+            if ENEMIES.items.empty?
+                @world_gen_length += 500
+                @world_gen_density += 1
+                regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+            end
         end
 
         def self.offset
