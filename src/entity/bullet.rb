@@ -39,14 +39,6 @@ module GosuGameJam6
             position.x += Gosu.offset_x(self.rotation, speed)
             position.y += Gosu.offset_y(self.rotation, speed)
 
-            # If this is far enough off the screen, remove it
-            if position.x < -SCREEN_PADDING ||
-               position.x > (GosuGameJam6::Game::WIDTH + SCREEN_PADDING) ||
-               position.y < -SCREEN_PADDING ||
-               position.y > (GosuGameJam6::Game::HEIGHT + SCREEN_PADDING)
-                unregister
-            end
-
             # Check if this hit an enemy
             if friendly?
                 if (enemy = Game::ENEMIES.items.find { |enemy| colliding_with?(enemy.bounding_box) })
@@ -63,7 +55,7 @@ module GosuGameJam6
             end
 
             # Check if this hit a wall, or went out of an open area
-            if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) } || !Game::OPEN_AREAS.items.any? { |area| colliding_with?(area.full_bounding_box) }
+            if Game::WALLS.items.any? { |wall| colliding_with?(wall.bounding_box) } || !Game::OPEN_AREAS.items.any? { |area| colliding_with?(area.bounding_box) }
                 # TODO: "fizzle" animation
                 unregister
                 return
