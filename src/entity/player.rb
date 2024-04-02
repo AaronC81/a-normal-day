@@ -11,7 +11,11 @@ module GosuGameJam6
         def initialize(**kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.placeholder(WIDTH, HEIGHT, Gosu::Color::GREEN)
+                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
+                    "walk" => OZ::Animation.new(
+                        (0..3).map { |i| Gosu::Image.new(File.join(RES_DIR, "player/walk#{i}.png")) },
+                        7,
+                    )
                 },
                 **kw
             )
@@ -44,6 +48,8 @@ module GosuGameJam6
             # Handle movement and wall checking in both X and Y directions
             # Means you can still slide along a horizontal wall when holding W+D, for example
 
+            very_original_position = position.dup
+
             old_position = position.dup
             position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
             position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
@@ -58,6 +64,12 @@ module GosuGameJam6
             unless valid_position?
                 # Cancel move if it means we hit a wall
                 self.position = old_position
+            end
+
+            if very_original_position != position
+                self.animation = "walk"
+            else
+                self.animation = "idle"
             end
         end
 

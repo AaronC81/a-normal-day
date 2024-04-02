@@ -4,6 +4,8 @@ require 'orange_zest'
 OZ = OrangeZest
 require_relative 'ext/orange_zest'
 
+RES_DIR = File.join(__dir__, "..", "res")
+
 require_relative 'entity/player'
 require_relative 'entity/bullet'
 require_relative 'entity/wall'
