@@ -3,12 +3,9 @@ require_relative 'character'
 
 module GosuGameJam6
     class Player < Character
-        WIDTH = 30
-        HEIGHT = 30
-
         SPEED = 5
 
-        def initialize(**kw)
+        def initialize(weapon_sprite:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
@@ -19,6 +16,8 @@ module GosuGameJam6
                 },
                 **kw
             )
+
+            @weapon_sprite = weapon_sprite
         end
 
         def max_health
@@ -78,6 +77,21 @@ module GosuGameJam6
                 position.x + image.width / 2,
                 position.y + image.height / 2,
             ]
+        end
+
+        def draw
+            cursor_world_pos = OZ::Input.cursor - Game.offset
+            self.mirror_x = cursor_world_pos.x < centre_position.x
+
+            super
+
+            # Draw weapon too, rotated to face cursor
+            weapon_origin = OZ::Point[
+                position.x + image.width / 2,
+                position.y + (image.height / 5) * 3,
+            ]
+            angle = Gosu.angle(weapon_origin.x, weapon_origin.y, cursor_world_pos.x, cursor_world_pos.y) - 90
+            @weapon_sprite.draw_rot(weapon_origin.x, weapon_origin.y, 0, angle, 0.5, 0.5, 1, mirror_x ? -1 : 1)
         end
     end
 end

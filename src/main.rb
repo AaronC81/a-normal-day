@@ -51,7 +51,9 @@ module GosuGameJam6
             ENEMIES.register
 
             # Create player
-            @@player = GosuGameJam6::Player.new
+            @@player = GosuGameJam6::Player.new(
+                weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png"))
+            )
             @@player.register
 
             # Difficulty control
