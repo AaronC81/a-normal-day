@@ -3,7 +3,12 @@ require_relative '../enemy'
 module GosuGameJam6
     class MachineGunTurret < Enemy
         def initialize(**kw)
-            super(**kw)
+            super(
+                animations: {
+                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "enemy/machine_gun_turret.png")))
+                },
+                **kw
+            )
             @next_fire_timer = rand(200..300)
             @firing_timer = 0
         end
