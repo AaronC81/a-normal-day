@@ -29,21 +29,24 @@ module GosuGameJam6
             areas = []
 
             next_origin = OZ::Point[0, 0]
+            is_first = true
 
             # First, create the straights. We can deal with corners later...
             (corridors + [nil]).each_cons(2).each do |(length, width, direction), (_, next_width, _)|
                 case direction
                 when :left, :right
-                    areas << OpenArea.new(width: length, height: width, position: next_origin)
+                    areas << OpenArea.new(width: length, height: width, position: next_origin, has_walls: true)
                     if next_width
                         next_origin += OZ::Point[length - next_width, width]
                     end
                 when :up, :down
-                    areas << OpenArea.new(width: width, height: length, position: next_origin)
+                    areas << OpenArea.new(width: width, height: length, position: next_origin, has_walls: !(direction == :down && !is_first))
                     if next_width
                         next_origin += OZ::Point[width, length - next_width]
                     end
                 end
+
+                is_first = false
             end
             
             areas
