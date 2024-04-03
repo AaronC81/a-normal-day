@@ -38,7 +38,6 @@ module GosuGameJam6
         
         def initialize
             super WIDTH, HEIGHT
-            Gosu.enable_undocumented_retrofication
 
             # Add a component to clear the screen
             OZ::Component
