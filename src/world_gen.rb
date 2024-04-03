@@ -80,6 +80,16 @@ module GosuGameJam6
                 end
                 this_direction = available_directions_by_axis[axis].sample
 
+                # Snap to multiples of floor tile size
+                case axis
+                when :horizontal
+                    this_length = round_up_to(this_length, OpenArea::FLOOR_SPRITE.width)
+                    this_width = round_up_to(this_width, OpenArea::FLOOR_SPRITE.height)
+                when :vertical
+                    this_length = round_up_to(this_length, OpenArea::FLOOR_SPRITE.height)
+                    this_width = round_up_to(this_width, OpenArea::FLOOR_SPRITE.width)
+                end
+
                 corridors << [this_length, this_width, this_direction]
 
                 # Invert axis
@@ -92,6 +102,10 @@ module GosuGameJam6
             end
 
             corridors
+        end
+
+        def round_up_to(num, mult)
+            (num / mult.to_f).ceil * mult
         end
     end
 end
