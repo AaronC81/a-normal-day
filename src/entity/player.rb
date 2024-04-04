@@ -30,10 +30,16 @@ module GosuGameJam6
             ["Better accuracy", ->{
                 Game.player.weapon_spread -= 2
                 Game.player.weapon_spread = 0 if Game.player.weapon_spread < 0
-            }]
+            }],
+            ["Gain 1 extra heart", ->{
+                Game.player.max_health += 2
+                Game.player.health += 2
+            }],
         ]
 
         def initialize(weapon_sprite:, weapon_sound:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, weapon_damage:, **kw)
+            @max_health = 10
+
             super(
                 animations: {
                     "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
@@ -44,6 +50,8 @@ module GosuGameJam6
                 },
                 **kw
             )
+
+            @speed = 5
 
             @weapon_sprite = weapon_sprite
             @weapon_sound = weapon_sound
@@ -57,17 +65,12 @@ module GosuGameJam6
             @muzzle_flash_counter = 0
             @muzzle_flash_sprite = nil
 
-            @speed = 5
-
             @invinciblity_time = 45
             @invinciblity_time_remaining = 0
+
         end
 
-        attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed, :invinciblity_time
-
-        def max_health
-            10
-        end
+        attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed, :invinciblity_time, :max_health
 
         def update
             super
