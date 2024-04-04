@@ -162,7 +162,7 @@ module GosuGameJam6
             @transition.draw
         end
 
-        def self.line_of_sight?(a, b=Game.player.position)
+        def self.line_of_sight?(a, b=Game.player.position, max_distance: nil)
             # Take an arbitrary sample of points along the line between the two points, and check
             # they all fall into an `OpenArea`
             # For "dramatic effect", and also because it's harder to program, walls don't block
@@ -175,6 +175,12 @@ module GosuGameJam6
             sample_points.times do |i|
                 this_point = a + OZ::Point[i * x_step, i * y_step]
                 if !Game::OPEN_AREAS.items.any? { |area| area.bounding_box.point_inside?(this_point) }
+                    return false
+                end
+            end
+
+            if max_distance
+                if Gosu.distance(a.x, a.y, b.x, b.y) > max_distance
                     return false
                 end
             end
