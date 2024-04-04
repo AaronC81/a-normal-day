@@ -16,6 +16,7 @@ require_relative 'entity/open_area'
 
 require_relative 'component/spawner'
 require_relative 'component/ui'
+require_relative 'component/transition'
 
 require_relative 'world_gen'
 
@@ -38,6 +39,8 @@ module GosuGameJam6
         
         def initialize
             super WIDTH, HEIGHT
+
+            @transition = Transition.new
 
             # Add a component to clear the screen
             OZ::Component
@@ -93,12 +96,18 @@ module GosuGameJam6
             STATIC_EARLY.update
             STATIC_LATE.update
             OZ::Input.clear_click
+            @transition.update
 
-            # TODO: crude
-            if ENEMIES.items.empty?
-                @world_gen_length += 500
-                @world_gen_density += 1
-                regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+            if OZ::TriggerCondition.watch(ENEMIES.items.empty?) == :on
+                OZ::Scheduler.start do
+                    OZ::Scheduler.wait(60)
+                    @transition.fade_out(30) do
+                        @world_gen_length += 500
+                        @world_gen_density += 1
+                        regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+                        @transition.fade_in(30)
+                    end
+                end
             end
         end
 
@@ -115,6 +124,7 @@ module GosuGameJam6
                 super
             end
             STATIC_LATE.draw
+            @transition.draw
         end
 
         def self.line_of_sight?(a, b=Game.player.position)
