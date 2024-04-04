@@ -2,6 +2,25 @@ require_relative 'entity/wall'
 
 module GosuGameJam6
     class WorldGen
+        # Given a corridor description, moves the player to the correct spawn position.
+        def move_player_to_spawn(corridors)
+            length, width, direction = corridors.first
+            length_inside = 50
+
+            case direction
+            when :up
+                Game.player.position = OZ::Point[(width - Game.player.image.height) / 2, -150]
+            when :down
+                Game.player.position = OZ::Point[(width - Game.player.image.height) / 2, 150]
+            when :right
+                Game.player.position = OZ::Point[50, (width - Game.player.image.height) / 2]
+            when :left
+                Game.player.position = OZ::Point[-150, (width - Game.player.image.height) / 2]
+            else
+                raise "unknown direction #{direction.inspect}"
+            end
+        end
+        
         # Given a list of areas, returns a list of (unregistered) enemies to populate them with.
         def populate_areas(areas, density, enemy_pool)
             enemies = []
@@ -31,18 +50,30 @@ module GosuGameJam6
             next_origin = OZ::Point[0, 0]
             is_first = true
 
-            # First, create the straights. We can deal with corners later...
+            # Works through dark magic, I think..!?
             (corridors + [nil]).each_cons(2).each do |(length, width, direction), (_, next_width, _)|
                 case direction
-                when :left, :right
+                when :right
                     areas << OpenArea.new(width: length, height: width, position: next_origin, has_walls: true)
                     if next_width
                         next_origin += OZ::Point[length - next_width, width]
                     end
-                when :up, :down
+                when :left
+                    next_origin.x -= length
+                    areas << OpenArea.new(width: length, height: width, position: next_origin, has_walls: true)
+                    if next_width
+                        next_origin += OZ::Point[0, width]
+                    end
+                when :down
                     areas << OpenArea.new(width: width, height: length, position: next_origin, has_walls: !(direction == :down && !is_first))
                     if next_width
                         next_origin += OZ::Point[width, length - next_width]
+                    end
+                when :up
+                    next_origin.y -= length
+                    areas << OpenArea.new(width: width, height: length, position: next_origin, has_walls: !(direction == :down && !is_first))
+                    if next_width
+                        next_origin += OZ::Point[width, 0]
                     end
                 end
 

@@ -71,11 +71,12 @@ module GosuGameJam6
 
         def regenerate_world(length, density, pool)
             # Tear down
-            OPEN_AREAS.items.each(&:unregister)
-            ENEMIES.items.each(&:unregister)
+            OPEN_AREAS.items.clear
+            ENEMIES.items.clear
 
             wg = WorldGen.new
-            areas = wg.corridor_areas(wg.generate_corridor_description(length))
+            corridors = wg.generate_corridor_description(length)
+            areas = wg.corridor_areas(corridors)
             areas.each do |area|
                 area.register(OPEN_AREAS)
             end
@@ -84,8 +85,7 @@ module GosuGameJam6
                 enemy.register(ENEMIES)
             end
 
-            # TODO: better spawn location
-            @@player.position = areas.first.bounding_box.centre
+            wg.move_player_to_spawn(corridors)
         end
 
         def update
