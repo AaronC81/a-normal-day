@@ -2,10 +2,19 @@ module GosuGameJam6
     class Bullet < OZ::Entity
         SCREEN_PADDING = 50
 
+        SPRITE_SMALL = {
+            true =>  Gosu::Image.new(File.join(RES_DIR, "weapon/bullet_small.png")),
+            false => Gosu::Image.new(File.join(RES_DIR, "weapon/bullet_small_enemy.png")),
+        }
+        SPRITE_MEDIUM = {
+            true =>  Gosu::Image.new(File.join(RES_DIR, "weapon/bullet_medium.png")),
+            false => Gosu::Image.new(File.join(RES_DIR, "weapon/bullet_medium_enemy.png")),
+        }
+
         def initialize(friendly:, speed:, damage:, **kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.placeholder(width, height, Gosu::Color::BLUE)
+                    "idle" => OZ::Animation.static(SPRITE_MEDIUM[friendly])
                 },
                 **kw
             )
@@ -19,11 +28,11 @@ module GosuGameJam6
         end
 
         def width
-            5
+            image.width
         end
 
         def height
-            30
+            image.height
         end
 
         attr_accessor :speed, :damage
