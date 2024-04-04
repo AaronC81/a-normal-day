@@ -18,7 +18,7 @@ module GosuGameJam6
                 Game.player.weapon_damage = (Game.player.weapon_damage * 1.25).ceil.to_i
             }],
             ["Move faster", ->{
-                Game.player.speed = (Game.player.speed * 1.25).ceil.to_i
+                Game.player.speed = (Game.player.speed * 1.15).ceil.to_i
             }],
             ["Longer immunity after getting hit", ->{
                 Game.player.invinciblity_time = (Game.player.invinciblity_time * 1.5).ceil.to_i
