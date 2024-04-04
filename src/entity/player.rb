@@ -15,10 +15,13 @@ module GosuGameJam6
                 Game.player.weapon_cooldown = (Game.player.weapon_cooldown * 0.75).floor.to_i
             }],
             ["More weapon damage", ->{
-                Game.player.weapon_damage = (Game.player.weapon_cooldown * 1.25).ceil.to_i
+                Game.player.weapon_damage = (Game.player.weapon_damage * 1.25).ceil.to_i
             }],
             ["Move faster", ->{
                 Game.player.speed = (Game.player.speed * 1.25).ceil.to_i
+            }],
+            ["Longer immunity after getting hit", ->{
+                Game.player.invinciblity_time = (Game.player.invinciblity_time * 1.5).ceil.to_i
             }],
         ]
 
@@ -46,9 +49,12 @@ module GosuGameJam6
             @muzzle_flash_sprite = nil
 
             @speed = 5
+
+            @invinciblity_time = 45
+            @invinciblity_time_remaining = 0
         end
 
-        attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed
+        attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed, :invinciblity_time
 
         def max_health
             100
@@ -59,6 +65,7 @@ module GosuGameJam6
             
             update_movement
 
+            @invinciblity_time_remaining -= 1 if @invinciblity_time_remaining > 0
             @weapon_cooldown_remaining -= 1 if @weapon_cooldown_remaining > 0
 
             # Determine whether the weapon should fire this tick
@@ -90,6 +97,15 @@ module GosuGameJam6
                 @muzzle_flash_counter = 3
                 @muzzle_flash_sprite = MUZZLE_FLASHES.sample
             end
+        end
+
+        def take_damage(amount)
+            if @invinciblity_time_remaining > 0
+                return
+            end
+
+            super
+            @invinciblity_time_remaining = @invinciblity_time
         end
 
         def update_movement
@@ -134,10 +150,12 @@ module GosuGameJam6
 
             super
 
+            self.opacity = (@invinciblity_time_remaining > 0 ? 0.4 : 1)
+
             # Draw weapon too, rotated to face cursor
             weapon_origin = centre_position
             angle = Gosu.angle(weapon_origin.x, weapon_origin.y, cursor_world_pos.x, cursor_world_pos.y)
-            @weapon_sprite.draw_rot(weapon_origin.x, weapon_origin.y, 0, angle  - 90, 0.5, 0.5, 1, mirror_x ? -1 : 1)
+            @weapon_sprite.draw_rot(weapon_origin.x, weapon_origin.y, 0, angle  - 90, 0.5, 0.5, 1, mirror_x ? -1 : 1, Gosu::Color.argb(opacity * 255, 255, 255, 255))
 
             if @muzzle_flash_counter > 0
                 @muzzle_flash_counter -= 1
