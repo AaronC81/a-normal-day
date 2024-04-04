@@ -54,6 +54,11 @@ module GosuGameJam6
                 cursor_world_pos = OZ::Input.cursor - Game.offset
                 bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, cursor_world_pos.x, cursor_world_pos.y)
                 bullet.rotation += rand(-@weapon_spread .. @weapon_spread)
+
+                # Move the bullet a bit past the player, so it doesn't appear to spawn inside them
+                bullet.position.x += Gosu.offset_x(bullet.rotation, image.width)
+                bullet.position.y += Gosu.offset_y(bullet.rotation, image.width)
+
                 bullet.register
 
                 @weapon_cooldown_remaining = @weapon_cooldown
