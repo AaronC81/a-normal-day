@@ -51,7 +51,10 @@ module GosuGameJam6
 
             # Create player
             @@player = GosuGameJam6::Player.new(
-                weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png"))
+                weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png")),
+                weapon_cooldown: 8,
+                weapon_is_automatic: true,
+                weapon_spread: 4,
             )
             @@player.register
 

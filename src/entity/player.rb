@@ -5,7 +5,7 @@ module GosuGameJam6
     class Player < Character
         SPEED = 5
 
-        def initialize(weapon_sprite:, **kw)
+        def initialize(weapon_sprite:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
@@ -18,6 +18,11 @@ module GosuGameJam6
             )
 
             @weapon_sprite = weapon_sprite
+
+            @weapon_is_automatic = weapon_is_automatic
+            @weapon_cooldown = weapon_cooldown
+            @weapon_spread = weapon_spread
+            @weapon_cooldown_remaining = 0
         end
 
         def max_health
@@ -29,7 +34,16 @@ module GosuGameJam6
             
             update_movement
 
-            if OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on
+            @weapon_cooldown_remaining -= 1 if @weapon_cooldown_remaining > 0
+
+            # Determine whether the weapon should fire this tick
+            if @weapon_is_automatic
+                firing = Gosu.button_down?(Gosu::MS_LEFT)
+            else
+                firing = (OZ::TriggerCondition.watch(Gosu.button_down?(Gosu::MS_LEFT)) == :on)
+            end
+            firing &&= (@weapon_cooldown_remaining <= 0)
+            if firing
                 bullet = Bullet.new(
                     friendly: true,
                     position: bounding_box.centre,
@@ -39,7 +53,10 @@ module GosuGameJam6
             
                 cursor_world_pos = OZ::Input.cursor - Game.offset
                 bullet.rotation = Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, cursor_world_pos.x, cursor_world_pos.y)
+                bullet.rotation += rand(-@weapon_spread .. @weapon_spread)
                 bullet.register
+
+                @weapon_cooldown_remaining = @weapon_cooldown
             end
         end
 
