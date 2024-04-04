@@ -66,7 +66,7 @@ module GosuGameJam6
                 weapon_sound: Sounds::SMG,
                 weapon_cooldown: 8,
                 weapon_is_automatic: true,
-                weapon_spread: 4,
+                weapon_spread: 5,
                 weapon_damage: 20,
             )
             @@player.register(GAME)
@@ -123,7 +123,7 @@ module GosuGameJam6
                     @transition.fade_out(30) do
                         Music::ELEVATOR.play(true)
 
-                        @upgrade_menu.choices = Player::UPGRADES.sample(3) + [
+                        @upgrade_menu.choices = Player::UPGRADES.sample(2) + [
                             ["Instead of an upgrade, restore half health", ->{
                                 Game.player.restore_health(Game.player.max_health / 2)
                             }],

@@ -23,6 +23,14 @@ module GosuGameJam6
             ["Longer immunity after getting hit", ->{
                 Game.player.invinciblity_time = (Game.player.invinciblity_time * 1.5).ceil.to_i
             }],
+            ["Disable automatic fire, but triple damage", ->{
+                Game.player.weapon_is_automatic = false
+                Game.player.weapon_damage *= 3
+            }],
+            ["Better accuracy", ->{
+                Game.player.weapon_spread -= 2
+                Game.player.weapon_spread = 0 if Game.player.weapon_spread < 0
+            }]
         ]
 
         def initialize(weapon_sprite:, weapon_sound:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, weapon_damage:, **kw)
