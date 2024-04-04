@@ -5,6 +5,13 @@ module GosuGameJam6
     class Player < Character
         SPEED = 5
 
+        MUZZLE_FLASHES = [
+            Gosu::Image.new(File.join(RES_DIR, "weapon/flash0.png")),
+            Gosu::Image.new(File.join(RES_DIR, "weapon/flash1.png")),
+            Gosu::Image.new(File.join(RES_DIR, "weapon/flash2.png")),
+            Gosu::Image.new(File.join(RES_DIR, "weapon/flash3.png")),
+        ]
+
         def initialize(weapon_sprite:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, **kw)
             super(
                 animations: {
@@ -23,6 +30,9 @@ module GosuGameJam6
             @weapon_cooldown = weapon_cooldown
             @weapon_spread = weapon_spread
             @weapon_cooldown_remaining = 0
+
+            @muzzle_flash_counter = 0
+            @muzzle_flash_sprite = nil
         end
 
         def max_health
@@ -62,6 +72,8 @@ module GosuGameJam6
                 bullet.register
 
                 @weapon_cooldown_remaining = @weapon_cooldown
+                @muzzle_flash_counter = 3
+                @muzzle_flash_sprite = MUZZLE_FLASHES.sample
             end
         end
 
@@ -108,12 +120,17 @@ module GosuGameJam6
             super
 
             # Draw weapon too, rotated to face cursor
-            weapon_origin = OZ::Point[
-                position.x + image.width / 2,
-                position.y + (image.height / 5) * 3,
-            ]
-            angle = Gosu.angle(weapon_origin.x, weapon_origin.y, cursor_world_pos.x, cursor_world_pos.y) - 90
-            @weapon_sprite.draw_rot(weapon_origin.x, weapon_origin.y, 0, angle, 0.5, 0.5, 1, mirror_x ? -1 : 1)
+            weapon_origin = centre_position
+            angle = Gosu.angle(weapon_origin.x, weapon_origin.y, cursor_world_pos.x, cursor_world_pos.y)
+            @weapon_sprite.draw_rot(weapon_origin.x, weapon_origin.y, 0, angle  - 90, 0.5, 0.5, 1, mirror_x ? -1 : 1)
+
+            if @muzzle_flash_counter > 0
+                @muzzle_flash_counter -= 1
+                flash_position = weapon_origin.dup
+                flash_position.x += Gosu.offset_x(angle, image.width * 0.75)
+                flash_position.y += Gosu.offset_y(angle, image.width * 0.75)
+                @muzzle_flash_sprite.draw_rot(flash_position.x, flash_position.y, 0, angle)
+            end
         end
     end
 end
