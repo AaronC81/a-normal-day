@@ -53,6 +53,8 @@ module GosuGameJam6
                 unless valid_position?
                     self.position = old_position
                 end
+
+                self.mirror_x = (vector_to_player.x > 0)
             end
         end
     end
