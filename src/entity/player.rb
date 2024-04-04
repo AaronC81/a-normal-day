@@ -69,7 +69,7 @@ module GosuGameJam6
                 bullet.position.x += Gosu.offset_x(bullet.rotation, image.width)
                 bullet.position.y += Gosu.offset_y(bullet.rotation, image.width)
 
-                bullet.register
+                bullet.register(Game::GAME)
 
                 @weapon_cooldown_remaining = @weapon_cooldown
                 @muzzle_flash_counter = 3

@@ -26,7 +26,7 @@ module GosuGameJam6
         def fire_at_player(spread:, **kw)
             bullet = Bullet.new(friendly: false, position: bounding_box.centre, **kw)
             bullet.rotation = angle_to_player + rand(-spread .. spread)
-            bullet.register
+            bullet.register(Game::GAME)
 
             bullet
         end

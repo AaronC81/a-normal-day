@@ -19,11 +19,15 @@ require_relative 'component/ui'
 require_relative 'component/transition'
 
 require_relative 'world_gen'
+require_relative 'elevator_scene'
+require_relative 'upgrade_menu'
 
 module GosuGameJam6
     class Game < OZ::Window
         WIDTH = 1600
         HEIGHT = 900
+
+        GAME = OZ::Group.new
 
         WALLS = OZ::Group.new
         OPEN_AREAS = OZ::Group.new
@@ -48,9 +52,12 @@ module GosuGameJam6
                 .register(STATIC_EARLY)
 
             # Set up groups
-            OPEN_AREAS.register
-            WALLS.register
-            ENEMIES.register
+            OPEN_AREAS.register(GAME)
+            WALLS.register(GAME)
+            ENEMIES.register(GAME)
+
+            # Create menus
+            @upgrade_menu = UpgradeMenu.new
 
             # Create player
             @@player = GosuGameJam6::Player.new(
@@ -59,7 +66,7 @@ module GosuGameJam6
                 weapon_is_automatic: true,
                 weapon_spread: 4,
             )
-            @@player.register
+            @@player.register(GAME)
 
             # Difficulty control
             @world_gen_length = 2000
@@ -94,6 +101,13 @@ module GosuGameJam6
         def update
             super
             STATIC_EARLY.update
+
+            if @is_on_upgrade_menu
+                @upgrade_menu.update
+            else
+                GAME.update
+            end
+
             STATIC_LATE.update
             OZ::Input.clear_click
             @transition.update
@@ -102,9 +116,22 @@ module GosuGameJam6
                 OZ::Scheduler.start do
                     OZ::Scheduler.wait(60)
                     @transition.fade_out(30) do
-                        @world_gen_length += 500
-                        @world_gen_density += 1
-                        regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+                        @upgrade_menu.choices = [ # TEMP
+                            ["+25% fire rate", ->{}],
+                            ["+5% chance to fire an additional bullet", ->{}],
+                            ["+25% damage", ->{}],
+                            ["Instead of an upgrade, restore 50% health", ->{}],
+                        ]
+                        @is_on_upgrade_menu = true
+                        @upgrade_menu.on_choice_made = ->do
+                            @transition.fade_out(30) do
+                                @is_on_upgrade_menu = false
+                                @world_gen_length += 500
+                                @world_gen_density += 1
+                                regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+                                @transition.fade_in(30)
+                            end
+                        end
                         @transition.fade_in(30)
                     end
                 end
@@ -119,10 +146,18 @@ module GosuGameJam6
         end
     
         def draw
+            super
+
             STATIC_EARLY.draw
-            Gosu.translate(Game.offset.x, Game.offset.y) do
-                super
+
+            if @is_on_upgrade_menu
+                @upgrade_menu.draw
+            else
+                Gosu.translate(Game.offset.x, Game.offset.y) do
+                    GAME.draw
+                end
             end
+
             STATIC_LATE.draw
             @transition.draw
         end
