@@ -65,6 +65,7 @@ module GosuGameJam6
                 weapon_cooldown: 8,
                 weapon_is_automatic: true,
                 weapon_spread: 4,
+                weapon_damage: 20,
             )
             @@player.register(GAME)
 
@@ -116,11 +117,10 @@ module GosuGameJam6
                 OZ::Scheduler.start do
                     OZ::Scheduler.wait(60)
                     @transition.fade_out(30) do
-                        @upgrade_menu.choices = [ # TEMP
-                            ["+25% fire rate", ->{}],
-                            ["+5% chance to fire an additional bullet", ->{}],
-                            ["+25% damage", ->{}],
-                            ["Instead of an upgrade, restore 50% health", ->{}],
+                        @upgrade_menu.choices = Player::UPGRADES.sample(3) + [
+                            ["Instead of an upgrade, restore half health", ->{
+                                Game.player.restore_health(Game.player.max_health / 2)
+                            }],
                         ]
                         @is_on_upgrade_menu = true
                         @upgrade_menu.on_choice_made = ->do

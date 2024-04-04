@@ -3,8 +3,6 @@ require_relative 'character'
 
 module GosuGameJam6
     class Player < Character
-        SPEED = 5
-
         MUZZLE_FLASHES = [
             Gosu::Image.new(File.join(RES_DIR, "weapon/flash0.png")),
             Gosu::Image.new(File.join(RES_DIR, "weapon/flash1.png")),
@@ -12,7 +10,19 @@ module GosuGameJam6
             Gosu::Image.new(File.join(RES_DIR, "weapon/flash3.png")),
         ]
 
-        def initialize(weapon_sprite:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, **kw)
+        UPGRADES = [
+            ["Fire faster", ->{
+                Game.player.weapon_cooldown = (Game.player.weapon_cooldown * 0.75).floor.to_i
+            }],
+            ["More weapon damage", ->{
+                Game.player.weapon_damage = (Game.player.weapon_cooldown * 1.25).ceil.to_i
+            }],
+            ["Move faster", ->{
+                Game.player.speed = (Game.player.speed * 1.25).ceil.to_i
+            }],
+        ]
+
+        def initialize(weapon_sprite:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, weapon_damage:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
@@ -30,10 +40,15 @@ module GosuGameJam6
             @weapon_cooldown = weapon_cooldown
             @weapon_spread = weapon_spread
             @weapon_cooldown_remaining = 0
+            @weapon_damage = 20
 
             @muzzle_flash_counter = 0
             @muzzle_flash_sprite = nil
+
+            @speed = 5
         end
+
+        attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed
 
         def max_health
             100
@@ -58,7 +73,7 @@ module GosuGameJam6
                     friendly: true,
                     position: bounding_box.centre,
                     speed: 20,
-                    damage: 20,
+                    damage: @weapon_damage,
                 )
             
                 cursor_world_pos = OZ::Input.cursor - Game.offset
@@ -84,16 +99,16 @@ module GosuGameJam6
             very_original_position = position.dup
 
             old_position = position.dup
-            position.x -= SPEED if Gosu.button_down?(Gosu::KB_A)
-            position.x += SPEED if Gosu.button_down?(Gosu::KB_D)
+            position.x -= @speed if Gosu.button_down?(Gosu::KB_A)
+            position.x += @speed if Gosu.button_down?(Gosu::KB_D)
             unless valid_position?
                 # Cancel move if it means we hit a wall
                 self.position = old_position
             end
 
             old_position = position.dup
-            position.y -= SPEED if Gosu.button_down?(Gosu::KB_W)
-            position.y += SPEED if Gosu.button_down?(Gosu::KB_S)
+            position.y -= @speed if Gosu.button_down?(Gosu::KB_W)
+            position.y += @speed if Gosu.button_down?(Gosu::KB_S)
             unless valid_position?
                 # Cancel move if it means we hit a wall
                 self.position = old_position

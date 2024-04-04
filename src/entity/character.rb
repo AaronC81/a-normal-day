@@ -20,6 +20,11 @@ module GosuGameJam6
             die if @health <= 0
         end
 
+        def restore_health(amount)
+            @health += amount
+            @health = max_health if @health > max_health
+        end
+
         def die
             raise 'abstract: die'
         end
