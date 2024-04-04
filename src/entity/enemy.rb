@@ -30,5 +30,10 @@ module GosuGameJam6
 
             bullet
         end
+
+        def take_damage(amount)
+            super
+            Sounds::ENEMY_HIT.play(0.7)
+        end
     end
 end

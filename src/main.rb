@@ -21,6 +21,7 @@ require_relative 'component/transition'
 require_relative 'world_gen'
 require_relative 'elevator_scene'
 require_relative 'upgrade_menu'
+require_relative 'sounds'
 
 module GosuGameJam6
     class Game < OZ::Window
@@ -62,6 +63,7 @@ module GosuGameJam6
             # Create player
             @@player = GosuGameJam6::Player.new(
                 weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png")),
+                weapon_sound: Sounds::SMG,
                 weapon_cooldown: 8,
                 weapon_is_automatic: true,
                 weapon_spread: 4,
@@ -78,6 +80,8 @@ module GosuGameJam6
             # Draw UI
             # (This is last, so it gets drawn on top of other stuff)
             UI.new.register(STATIC_LATE)
+
+            Music::GAME.play(true)
         end
 
         def regenerate_world(length, density, pool)
@@ -117,6 +121,8 @@ module GosuGameJam6
                 OZ::Scheduler.start do
                     OZ::Scheduler.wait(60)
                     @transition.fade_out(30) do
+                        Music::ELEVATOR.play(true)
+
                         @upgrade_menu.choices = Player::UPGRADES.sample(3) + [
                             ["Instead of an upgrade, restore half health", ->{
                                 Game.player.restore_health(Game.player.max_health / 2)
@@ -125,6 +131,10 @@ module GosuGameJam6
                         @is_on_upgrade_menu = true
                         @upgrade_menu.on_choice_made = ->do
                             @transition.fade_out(30) do
+                                Music::ELEVATOR.stop
+                                Sounds::ELEVATOR_BELL.play(0.7)
+                                Music::GAME.play(true)
+
                                 @is_on_upgrade_menu = false
                                 @world_gen_length += 500
                                 @world_gen_density += 1

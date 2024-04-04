@@ -25,7 +25,7 @@ module GosuGameJam6
             }],
         ]
 
-        def initialize(weapon_sprite:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, weapon_damage:, **kw)
+        def initialize(weapon_sprite:, weapon_sound:, weapon_cooldown:, weapon_is_automatic:, weapon_spread:, weapon_damage:, **kw)
             super(
                 animations: {
                     "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "player/idle.png"))),
@@ -38,6 +38,7 @@ module GosuGameJam6
             )
 
             @weapon_sprite = weapon_sprite
+            @weapon_sound = weapon_sound
 
             @weapon_is_automatic = weapon_is_automatic
             @weapon_cooldown = weapon_cooldown
@@ -76,6 +77,8 @@ module GosuGameJam6
             end
             firing &&= (@weapon_cooldown_remaining <= 0)
             if firing
+                @weapon_sound.play(0.3)
+
                 bullet = Bullet.new(
                     friendly: true,
                     position: bounding_box.centre,
@@ -106,6 +109,7 @@ module GosuGameJam6
 
             super
             @invinciblity_time_remaining = @invinciblity_time
+            Sounds::PLAYER_HIT.play
         end
 
         def update_movement
