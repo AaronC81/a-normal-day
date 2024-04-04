@@ -22,7 +22,7 @@ module GosuGameJam6
         end
 
         def max_health
-            120
+            12
         end
 
         def update
@@ -43,7 +43,7 @@ module GosuGameJam6
                     Sounds::LASER_QUICK.play(0.5)
                     fire_at_player(
                         speed: 10,
-                        damage: 10,
+                        damage: 1,
                         spread: 5
                     )
                 end

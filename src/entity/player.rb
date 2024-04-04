@@ -52,7 +52,7 @@ module GosuGameJam6
             @weapon_cooldown = weapon_cooldown
             @weapon_spread = weapon_spread
             @weapon_cooldown_remaining = 0
-            @weapon_damage = 20
+            @weapon_damage = 2
 
             @muzzle_flash_counter = 0
             @muzzle_flash_sprite = nil
@@ -66,7 +66,7 @@ module GosuGameJam6
         attr_accessor :weapon_cooldown, :weapon_spread, :weapon_is_automatic, :weapon_damage, :speed, :invinciblity_time
 
         def max_health
-            100
+            10
         end
 
         def update

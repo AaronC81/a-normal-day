@@ -21,7 +21,7 @@ module GosuGameJam6
         end
 
         def max_health
-            80
+            8
         end
 
         def speed
@@ -39,7 +39,7 @@ module GosuGameJam6
                     Sounds::LASER_SLOW.play(0.3)
                     fire_at_player(
                         speed: 7,
-                        damage: 10,
+                        damage: 1,
                         spread: 15
                     )
                 end
