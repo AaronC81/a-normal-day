@@ -13,14 +13,6 @@ module GosuGameJam6
             @firing_timer = 0
         end
 
-        def width
-            50
-        end
-
-        def height
-            50
-        end
-
         def max_health
             12
         end

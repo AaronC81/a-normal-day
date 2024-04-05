@@ -1,42 +1,50 @@
 require_relative '../enemy'
 
 module GosuGameJam6
-    class Walker < Enemy
+    class Chaingunner < Enemy
         def initialize(**kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "enemy/walker.png")))
+                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "enemy/chaingunner.png")))
                 },
                 **kw
             )
-            @next_fire_timer = rand(200..300)
+            @next_fire_timer = rand(200..400)
+            @firing_timer = 0
         end
 
         def max_health
-            8
+            5
         end
 
         def speed
-            1.4
+            1.6
         end
 
         def update
             super
 
-            los = Game.line_of_sight?(position)
+            los = Game.line_of_sight?(position, max_distance: 1200)
 
             @next_fire_timer -= 1
             if @next_fire_timer <= 0
                 if los
-                    Sounds::LASER_SLOW.play(0.3)
-                    fire_at_player(
-                        speed: 7,
-                        damage: 2,
-                        spread: 15
-                    )
+                    @firing_timer = rand(15..35)
                 end
 
-                @next_fire_timer = rand(30..120)
+                @next_fire_timer = 120
+            end
+
+            if @firing_timer > 0
+                @firing_timer -= 1
+                if @firing_timer % 3 == 0
+                    Sounds::LASER_QUICK.play(0.5)
+                    fire_at_player(
+                        speed: 10,
+                        damage: 1,
+                        spread: 5
+                    )
+                end
             end
 
             if los

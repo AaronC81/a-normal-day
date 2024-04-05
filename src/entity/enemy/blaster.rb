@@ -1,11 +1,11 @@
 require_relative '../enemy'
 
 module GosuGameJam6
-    class Walker < Enemy
+    class Blaster < Enemy
         def initialize(**kw)
             super(
                 animations: {
-                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "enemy/walker.png")))
+                    "idle" => OZ::Animation.static(Gosu::Image.new(File.join(RES_DIR, "enemy/blaster.png")))
                 },
                 **kw
             )
@@ -13,30 +13,32 @@ module GosuGameJam6
         end
 
         def max_health
-            8
+            10
         end
 
         def speed
-            1.4
+            0.8
         end
 
         def update
             super
 
-            los = Game.line_of_sight?(position)
+            los = Game.line_of_sight?(position, max_distance: 500)
 
             @next_fire_timer -= 1
             if @next_fire_timer <= 0
                 if los
                     Sounds::LASER_SLOW.play(0.3)
-                    fire_at_player(
-                        speed: 7,
-                        damage: 2,
-                        spread: 15
-                    )
+                    6.times do
+                        fire_at_player(
+                            speed: 5,
+                            damage: 1,
+                            spread: 40
+                        )
+                    end
                 end
 
-                @next_fire_timer = rand(30..120)
+                @next_fire_timer = rand(120..180)
             end
 
             if los

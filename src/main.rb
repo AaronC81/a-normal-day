@@ -12,6 +12,8 @@ require_relative 'entity/wall'
 require_relative 'entity/enemy'
 require_relative 'entity/enemy/machine_gun_turret'
 require_relative 'entity/enemy/walker'
+require_relative 'entity/enemy/blaster'
+require_relative 'entity/enemy/chaingunner'
 require_relative 'entity/open_area'
 
 require_relative 'component/spawner'
@@ -39,6 +41,8 @@ module GosuGameJam6
         # Not registered into `Main` - used to draw stuff which shouldn't scroll
         STATIC_EARLY = OZ::Group.new
         STATIC_LATE = OZ::Group.new
+
+        ENEMY_POOL = [Walker, Walker, Walker, Walker, MachineGunTurret, MachineGunTurret, Blaster, Chaingunner]
 
         def self.player
             @@player
@@ -90,7 +94,7 @@ module GosuGameJam6
             @world_gen_length = 2000
             @world_gen_density = 1
             
-            regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+            regenerate_world(@world_gen_length, @world_gen_density, ENEMY_POOL)
 
             Music::ELEVATOR.play(true)
         end
@@ -112,6 +116,13 @@ module GosuGameJam6
             end
 
             wg.move_player_to_spawn(corridors)
+
+            # Don't generate anything too close to the player
+            ENEMIES.items.each do |enemy|
+                if Gosu.distance(enemy.position.x, enemy.position.y, @@player.position.x, @@player.position.y) < 1200
+                    enemy.unregister
+                end
+            end
         end
 
         def update
@@ -160,7 +171,7 @@ module GosuGameJam6
                                 @is_on_upgrade_menu = false
                                 @world_gen_length += 500
                                 @world_gen_density += 1
-                                regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
+                                regenerate_world(@world_gen_length, @world_gen_density, ENEMY_POOL)
                                 @transition.fade_in(30)
                             end
                         end
