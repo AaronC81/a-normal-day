@@ -1,7 +1,5 @@
 module GosuGameJam6
     module Sounds
-        RIFLE = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'rifle.wav'))
-        ASSAULT_RIFLE = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'ar.wav'))
         SMG = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'smg.wav'))
 
         ELEVATOR_BELL = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'bell.wav'))
