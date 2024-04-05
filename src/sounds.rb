@@ -9,6 +9,8 @@ module GosuGameJam6
 
         LASER_QUICK = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'laser_quick.wav'))
         LASER_SLOW = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'laser_slow.wav'))
+        LASER_HEAVY = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'laser_heavy.wav'))
+        LASER_LIGHT = Gosu::Sample.new(File.join(RES_DIR, 'sounds', 'laser_light.wav'))
     end
 
     module Music

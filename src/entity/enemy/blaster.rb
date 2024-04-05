@@ -28,7 +28,7 @@ module GosuGameJam6
             @next_fire_timer -= 1
             if @next_fire_timer <= 0
                 if los
-                    Sounds::LASER_SLOW.play(0.3)
+                    Sounds::LASER_HEAVY.play(0.3)
                     6.times do
                         fire_at_player(
                             speed: 5,

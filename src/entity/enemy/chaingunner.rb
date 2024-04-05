@@ -38,7 +38,7 @@ module GosuGameJam6
             if @firing_timer > 0
                 @firing_timer -= 1
                 if @firing_timer % 3 == 0
-                    Sounds::LASER_QUICK.play(0.5)
+                    Sounds::LASER_LIGHT.play(0.5)
                     fire_at_player(
                         speed: 10,
                         damage: 1,

@@ -42,7 +42,7 @@ module GosuGameJam6
             @standard_font.draw_text("Toggle fullscreen", FULLSCREEN_BUTTON.origin.x + 20, FULLSCREEN_BUTTON.origin.y + 20, 2, 1, 1, text_colour)
 
             @standard_font.draw_text("Created by Aaron Christiansen\nfor Gosu Game Jam 6", 20, 760, 2, 1, 1)
-            @small_font.draw_text("Audio from Freesound\n  Music: Sirkoto51, BlondPanda\n  SFX: SuperPhat, azumarill, BenjaminNelan, Raclure, djfroyd, Metzik", 20, 830, 2, 1, 1)
+            @small_font.draw_text("Audio from Freesound\n  Music: Sirkoto51, BlondPanda\n  SFX: SuperPhat, azumarill, BenjaminNelan, Raclure, djfroyd, Metzik, bubaproducer, mparsons99", 20, 830, 2, 1, 1)
         end
 
         # Returns boolean indicating whether game should start
