@@ -21,6 +21,7 @@ require_relative 'component/transition'
 require_relative 'world_gen'
 require_relative 'elevator_scene'
 require_relative 'upgrade_menu'
+require_relative 'main_menu'
 require_relative 'sounds'
 
 module GosuGameJam6
@@ -59,6 +60,8 @@ module GosuGameJam6
 
             # Create menus
             @upgrade_menu = UpgradeMenu.new
+            @main_menu = MainMenu.new
+            @is_on_main_menu = true
 
             # Create player
             @@player = GosuGameJam6::Player.new(
@@ -81,7 +84,7 @@ module GosuGameJam6
             # (This is last, so it gets drawn on top of other stuff)
             UI.new.register(STATIC_LATE)
 
-            Music::GAME.play(true)
+            Music::ELEVATOR.play(true)
         end
 
         def regenerate_world(length, density, pool)
@@ -109,6 +112,14 @@ module GosuGameJam6
 
             if @is_on_upgrade_menu
                 @upgrade_menu.update
+            elsif @is_on_main_menu
+                if @main_menu.update
+                    @transition.fade_out(30) do
+                        @is_on_main_menu = false
+                        Music::GAME.play(true)
+                        @transition.fade_in(30)
+                    end
+                end
             else
                 GAME.update
             end
@@ -162,13 +173,17 @@ module GosuGameJam6
 
             if @is_on_upgrade_menu
                 @upgrade_menu.draw
+                STATIC_LATE.draw
+            elsif @is_on_main_menu
+                @main_menu.draw
+                # Do not draw STATIC_LATE, because it includes UI
             else
                 Gosu.translate(Game.offset.x, Game.offset.y) do
                     GAME.draw
                 end
+                STATIC_LATE.draw
             end
 
-            STATIC_LATE.draw
             @transition.draw
         end
 
