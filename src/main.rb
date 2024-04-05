@@ -34,6 +34,7 @@ module GosuGameJam6
         WALLS = OZ::Group.new
         OPEN_AREAS = OZ::Group.new
         ENEMIES = OZ::Group.new
+        PLAYER = OZ::Group.new
 
         # Not registered into `Main` - used to draw stuff which shouldn't scroll
         STATIC_EARLY = OZ::Group.new
@@ -57,12 +58,23 @@ module GosuGameJam6
             OPEN_AREAS.register(GAME)
             WALLS.register(GAME)
             ENEMIES.register(GAME)
+            PLAYER.register(GAME)
 
             # Create menus
             @upgrade_menu = UpgradeMenu.new
             @main_menu = MainMenu.new
             @is_on_main_menu = true
 
+            # Draw UI
+            # (This is last, so it gets drawn on top of other stuff)
+            UI.new.register(STATIC_LATE)
+
+            reset
+        end
+
+        def reset
+            PLAYER.items.clear
+            
             # Create player
             @@player = GosuGameJam6::Player.new(
                 weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png")),
@@ -72,17 +84,13 @@ module GosuGameJam6
                 weapon_spread: 5,
                 weapon_damage: 20,
             )
-            @@player.register(GAME)
+            @@player.register(PLAYER)
 
             # Difficulty control
             @world_gen_length = 2000
             @world_gen_density = 1
             
             regenerate_world(@world_gen_length, @world_gen_density, [MachineGunTurret, Walker, Walker])
-
-            # Draw UI
-            # (This is last, so it gets drawn on top of other stuff)
-            UI.new.register(STATIC_LATE)
 
             Music::ELEVATOR.play(true)
         end
@@ -155,6 +163,15 @@ module GosuGameJam6
                         end
                         @transition.fade_in(30)
                     end
+                end
+            end
+
+            # Check if the player died
+            if OZ::TriggerCondition.watch(@@player.dead?) == :on
+                @transition.fade_out(30) do
+                    reset
+                    @is_on_main_menu = true
+                    @transition.fade_in(30)
                 end
             end
         end

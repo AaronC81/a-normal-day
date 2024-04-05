@@ -75,6 +75,8 @@ module GosuGameJam6
         def update
             super
             
+            return if dead?
+
             update_movement
 
             @invinciblity_time_remaining -= 1 if @invinciblity_time_remaining > 0
@@ -121,6 +123,10 @@ module GosuGameJam6
             super
             @invinciblity_time_remaining = @invinciblity_time
             Sounds::PLAYER_HIT.play
+        end
+
+        def die
+            # Handled by `Game`
         end
 
         def update_movement

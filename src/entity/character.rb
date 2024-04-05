@@ -16,6 +16,7 @@ module GosuGameJam6
         end
 
         def take_damage(amount)
+            return if dead?
             @health -= amount
             die if @health <= 0
         end
@@ -27,6 +28,10 @@ module GosuGameJam6
 
         def die
             raise 'abstract: die'
+        end
+
+        def dead?
+            @health <= 0
         end
 
         def valid_position?
