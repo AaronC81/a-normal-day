@@ -165,7 +165,7 @@ module GosuGameJam6
                         @upgrade_menu.on_choice_made = ->do
                             @transition.fade_out(30) do
                                 Music::ELEVATOR.stop
-                                Sounds::ELEVATOR_BELL.play(0.7)
+                                Sounds::ELEVATOR_BELL.play(0.4)
                                 Music::GAME.play(true)
 
                                 @is_on_upgrade_menu = false
