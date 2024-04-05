@@ -16,8 +16,12 @@ module GosuGameJam6
         def draw
             ElevatorScene.draw_elevator_scene(OZ::Point[200, 400]) 
 
-            Gosu.draw_rect(PLAY_BUTTON.origin.x, PLAY_BUTTON.origin.y, PLAY_BUTTON.width, PLAY_BUTTON.height, Gosu::Color::BLACK)
+            # Instructions
+            @standard_font.draw_text("WASD: Move", 850, 500, 2, 1, 1)
+            @standard_font.draw_text("Left click: Shoot", 840, 550, 2, 1, 1)
 
+            # Play button
+            Gosu.draw_rect(PLAY_BUTTON.origin.x, PLAY_BUTTON.origin.y, PLAY_BUTTON.width, PLAY_BUTTON.height, Gosu::Color::BLACK)
             text_colour = PLAY_BUTTON.point_inside?(OZ::Input.cursor) ? Gosu::Color::YELLOW : Gosu::Color::WHITE
             @standard_font.draw_text("Start!", PLAY_BUTTON.origin.x + 20, PLAY_BUTTON.origin.y + 20, 2, 1, 1, text_colour)
         end
