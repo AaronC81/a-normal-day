@@ -74,7 +74,7 @@ module GosuGameJam6
 
         def reset
             PLAYER.items.clear
-            
+
             # Create player
             @@player = GosuGameJam6::Player.new(
                 weapon_sprite: Gosu::Image.new(File.join(RES_DIR, "weapon/ar.png")),
@@ -121,12 +121,15 @@ module GosuGameJam6
             if @is_on_upgrade_menu
                 @upgrade_menu.update
             elsif @is_on_main_menu
-                if @main_menu.update
+                case @main_menu.update
+                when :play
                     @transition.fade_out(30) do
                         @is_on_main_menu = false
                         Music::GAME.play(true)
                         @transition.fade_in(30)
                     end
+                when :fullscreen
+                    self.fullscreen = !fullscreen?
                 end
             else
                 GAME.update
