@@ -61,9 +61,5 @@ module GosuGameJam6
 
             nil
         end
-
-        def needs_cursor?
-            true
-        end
     end
 end

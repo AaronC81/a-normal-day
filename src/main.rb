@@ -247,6 +247,10 @@ module GosuGameJam6
 
             true
         end
+
+        def needs_cursor?
+            true
+        end
     end
 end
 
