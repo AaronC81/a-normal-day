@@ -25,6 +25,7 @@ require_relative 'elevator_scene'
 require_relative 'upgrade_menu'
 require_relative 'main_menu'
 require_relative 'sounds'
+require_relative 'fonts'
 
 module GosuGameJam6
     class Game < OZ::Window
