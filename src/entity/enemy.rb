@@ -11,11 +11,14 @@ module GosuGameJam6
         end
 
         def angle_to_player
-            Gosu.angle(bounding_box.centre.x, bounding_box.centre.y, Game.player.bounding_box.centre.x, Game.player.bounding_box.centre.y)
+            my_centre = bounding_box.centre
+            player_centre = Game.player.bounding_box.centre
+            Gosu.angle(my_centre.x, my_centre.y, player_centre.x, player_centre.y)
         end
 
         def vector_to_player
-            OZ::Point[Gosu.offset_x(angle_to_player, 1), Gosu.offset_y(angle_to_player, 1)]
+            angle = angle_to_player
+            OZ::Point[Gosu.offset_x(angle, 1), Gosu.offset_y(angle, 1)]
         end
 
         def fire_at_player(spread:, **kw)
