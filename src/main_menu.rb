@@ -21,7 +21,7 @@ module GosuGameJam6
         def draw
             ElevatorScene.draw_elevator_scene(OZ::Point[200, 400]) 
 
-            LOGO.draw(730, 50)
+            LOGO.draw(730, 50, 1)
 
             if @defeated_on_floor
                 # Death screen

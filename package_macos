@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+shopt -s extglob
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+# Prepare folder
+mkdir -p "$SCRIPT_DIR/build"
+[ -e "$SCRIPT_DIR/build/macos" ] && rm -rf "$SCRIPT_DIR/build/macos"
+mkdir "$SCRIPT_DIR/build/macos"
+
+# Download template app
+curl https://github.com/gosu/ruby-app/releases/download/v0.14.6.pre1/Ruby.app.zip -L --output "$SCRIPT_DIR/build/macos/template.app.zip"
+unzip "$SCRIPT_DIR/build/macos/template.app.zip" -d "$SCRIPT_DIR/build/macos/app"
+
+# Rename
+mv "$SCRIPT_DIR/build/macos/app/Ruby.app" "$SCRIPT_DIR/build/macos/app/A Normal Day in the Killer Robot Factory.app"
+
+# Modify Info.plist
+INFO_PLIST="$SCRIPT_DIR/build/macos/app/A Normal Day in the Killer Robot Factory.app/Info.plist"
+defaults write "$INFO_PLIST" CFBundleIdentifier -string "cc.aaronc.A Normal Day in the Killer Robot Factory"
+defaults write "$INFO_PLIST" CFBundleName -string "A Normal Day in the Killer Robot Factory"
+
+# Copy files in
+RESOURCES="$SCRIPT_DIR/build/macos/app/A Normal Day in the Killer Robot Factory.app/Contents/Resources"
+mkdir "$RESOURCES/src"
+cp -r src/* "$RESOURCES/src"
+mkdir "$RESOURCES/res"
+cp -r res/!(*.sketch) "$RESOURCES/res"
+
+# Check out a copy of orange_zest into the app folder
+git clone https://github.com/AaronC81/orange_zest.git "$RESOURCES/orange_zest"
+
+# Create our own main
+rm "$RESOURCES/main.rb"
+echo "\$LOAD_PATH << \"#{__dir__}/orange_zest/lib\" ; require_relative 'src/main.rb'" > "$RESOURCES/main.rb"
+
+# Ensure that the Ruby is marked as executable - this was causing problems when testing in a VM!
+chmod +x "$SCRIPT_DIR/build/macos/app/A Normal Day in the Killer Robot Factory.app/Contents/MacOS/Ruby"
+
+# Zip
+pushd "$SCRIPT_DIR/build/macos/app/"
+zip -r "$SCRIPT_DIR/build/macos/app/A Normal Day in the Killer Robot Factory.app.zip" "A Normal Day in the Killer Robot Factory.app"
+popd

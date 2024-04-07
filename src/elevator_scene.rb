@@ -11,15 +11,15 @@ module GosuGameJam6
 
             3.times do |x|
                 if x == 1
-                    ELEVATOR_DOOR.draw(pt.x + x * w, pt.y)
+                    ELEVATOR_DOOR.draw(pt.x + x * w, pt.y, 1)
                 else
-                    WALL.draw(pt.x + x * w, pt.y)
+                    WALL.draw(pt.x + x * w, pt.y, 1)
                 end
             end
 
             3.times do |x|
                 4.times do |y|
-                    FLOOR.draw(pt.x + x * w, pt.y + y * h + WALL.height)
+                    FLOOR.draw(pt.x + x * w, pt.y + y * h + WALL.height, 1)
 
                     if x == 1 && y == 2
                         PLAYER.draw(pt.x + x * w + 4, pt.y + y * h + WALL.height - 6, 10)

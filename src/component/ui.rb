@@ -14,15 +14,15 @@ module GosuGameJam6
 
             heart_pos = OZ::Point[20, 20]
             full_hearts.times do
-                HEART_FULL.draw(heart_pos.x, heart_pos.y)
+                HEART_FULL.draw(heart_pos.x, heart_pos.y, 1000)
                 heart_pos.x += heart_spacing
             end
             if half_heart
-                HEART_HALF.draw(heart_pos.x, heart_pos.y)
+                HEART_HALF.draw(heart_pos.x, heart_pos.y, 1000)
                 heart_pos.x += heart_spacing
             end
             empty_hearts.times do
-                HEART_EMPTY.draw(heart_pos.x, heart_pos.y)
+                HEART_EMPTY.draw(heart_pos.x, heart_pos.y, 1000)
                 heart_pos.x += heart_spacing
             end
         end
