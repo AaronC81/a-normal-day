@@ -92,6 +92,7 @@ module GosuGameJam6
             @@player.register(PLAYER)
 
             # Difficulty control
+            @floor = 1
             @world_gen_length = 2000
             @world_gen_density = 1
             
@@ -172,6 +173,7 @@ module GosuGameJam6
                                 @is_on_upgrade_menu = false
                                 @world_gen_length += 500
                                 @world_gen_density += 1
+                                @floor += 1
                                 regenerate_world(@world_gen_length, @world_gen_density, ENEMY_POOL)
                                 @transition.fade_in(30)
                             end
@@ -184,6 +186,7 @@ module GosuGameJam6
             # Check if the player died
             if OZ::TriggerCondition.watch(@@player.dead?) == :on
                 @transition.fade_out(30) do
+                    @main_menu.defeated_on_floor = @floor
                     reset
                     @is_on_main_menu = true
                     @transition.fade_in(30)

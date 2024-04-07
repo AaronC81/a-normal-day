@@ -16,14 +16,22 @@ module GosuGameJam6
 
         LOGO = Gosu::Image.new(File.join(RES_DIR, 'logo.png'))
 
+        attr_accessor :defeated_on_floor
+
         def draw
             ElevatorScene.draw_elevator_scene(OZ::Point[200, 400]) 
 
             LOGO.draw(730, 50)
 
-            # Instructions
-            Fonts::STANDARD.draw_text("WASD: Move", 850, 550, 2, 1, 1)
-            Fonts::STANDARD.draw_text("Left click: Shoot", 840, 600, 2, 1, 1)
+            if @defeated_on_floor
+                # Death screen
+                Fonts::HEADER.draw_text("Defeated!", 850, 540, 2, 1, 1)
+                Fonts::STANDARD.draw_text("You reached floor #{defeated_on_floor}", 830, 600, 2, 1, 1)
+            else
+                # Instructions
+                Fonts::STANDARD.draw_text("WASD: Move", 850, 550, 2, 1, 1)
+                Fonts::STANDARD.draw_text("Left click: Shoot", 840, 600, 2, 1, 1)
+            end
 
             # Play button
             Gosu.draw_rect(PLAY_BUTTON.origin.x, PLAY_BUTTON.origin.y, PLAY_BUTTON.width, PLAY_BUTTON.height, Gosu::Color::BLACK)
