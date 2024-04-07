@@ -31,7 +31,7 @@ module GosuGameJam6
                     Sounds::LASER_SLOW.play(0.3)
                     fire_at_player(
                         speed: 7,
-                        damage: 2,
+                        damage: 1,
                         spread: 15
                     )
                 end
